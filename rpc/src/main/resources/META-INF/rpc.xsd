@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jason.com/schema/rpc" xmlns:tns="http://www.jason.com/schema/rpc" elementFormDefault="qualified">
+    
+    
+    
+    
+    <element name="client" >
+    	<complexType>
+    	  <attribute name="id" type="string"> </attribute>
+    	    <attribute name="ref" type="string"> </attribute>
+    	      <attribute name="interfaceClass" type="string"> </attribute>
+    	
+    	</complexType>
+    
+    </element>
+
+</schema>

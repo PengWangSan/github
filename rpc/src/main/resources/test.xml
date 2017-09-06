@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:rpc="http://www.jason.com/schema/rpc"  
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
+        http://www.jason.com/schema/rpc http://www.jason.com/schema/rpc.xsd">  
+          
+      <bean id="user" class="com.jason.bean.impl.UserImpl"></bean>
+          
+        <rpc:client id="testRpc"  ref="user" interfaceClass="com.jason.bean.User"/>  
+</beans>
