@@ -3,6 +3,6 @@ package com.wangp.msp;
 public interface Pervlet {
 	
 	
-	 public PvReponse handlerRequest(PvRequest req);
+	 public void handlerRequest(PvRequest req,PvReponse res);
 
 }

@@ -27,7 +27,6 @@ public class ServerThread implements Runnable {
 			String requestPage = null;
 			while (true) {
 				
-				System.out.println("新数据可以读取：");
 				while ((lineStr = lineReader.readLine()) != null) {
 
 					System.out.println(lineStr);
@@ -60,9 +59,8 @@ public class ServerThread implements Runnable {
 
 		OutputStream out = socket.getOutputStream();
 
-		if (file.exists()) {
+		if (file.exists()&&file.isFile()) {
 
-			out.close();
 
 		} else {
 			String msg = "12345678";
