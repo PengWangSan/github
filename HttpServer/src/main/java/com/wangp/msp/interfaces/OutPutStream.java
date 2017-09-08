@@ -1,4 +1,4 @@
-package com.wangp.msp;
+package com.wangp.msp.interfaces;
 
 public interface OutPutStream {
 

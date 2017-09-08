@@ -61,6 +61,8 @@ public class ServerThread implements Runnable {
 
 		if (file.exists()&&file.isFile()) {
 
+			
+			
 
 		} else {
 			String msg = "12345678";
