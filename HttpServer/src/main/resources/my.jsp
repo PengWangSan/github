@@ -8,8 +8,8 @@
 <body>
 
 <%
-     String user=request.getParam("user");
-     String password=request.getParam("password");
+     String user=(String) request.getParam("user");
+     String password=(String) request.getParam("password");
      if("aaaa".equals(user)&&"123456".equals(password)){
     	 
     	 out.println("Welcome:"+user);
