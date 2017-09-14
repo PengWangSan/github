@@ -10,7 +10,7 @@ public class HttpServer {
 
 	public static void main(String[] args) {
 
-		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
 		ServerSocket server = null;
 		try {
 			server = new ServerSocket(80);

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,29 +35,28 @@ public class ServerThread implements Runnable {
 			String lineStr = null;
 
 			String requestPage = null;
-			while (true) {
-
+ 
 				List<String>  reqStr=new ArrayList<String>();
 				while ((lineStr = lineReader.readLine()) != null) {
 
-					System.out.println(lineStr);
+				 	System.out.println(lineStr);
 					reqStr.add(lineStr);
 					
 					if (lineReader.getLineNumber() == 1) {
 						requestPage = lineStr.substring(lineStr.indexOf("/") + 1, lineStr.lastIndexOf(" "));
 
-						requestPage=requestPage.substring(0,requestPage.indexOf("?"));
+						if(requestPage.indexOf("?")!=-1) {
+					     	requestPage=requestPage.substring(0,requestPage.indexOf("?"));
+						}
 						
 					} else {
 						if (lineStr.isEmpty()) {
 							System.out.println("Head Finished");
 							doResponse(requestPage,reqStr);
-							break;
 						}
-
+						break;
 					}
 
-				}
 			}
 
 		} catch (IOException e) {
@@ -69,6 +69,7 @@ public class ServerThread implements Runnable {
 			e.printStackTrace();
 		}
 
+		System.out.println("___ÍË³ö¾€³Ì");
 	}
 
 	private void doResponse(String requestPage,List<String>  reqStr) throws IOException, InstantiationException, IllegalAccessException {
