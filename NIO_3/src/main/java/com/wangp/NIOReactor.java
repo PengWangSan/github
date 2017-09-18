@@ -47,7 +47,7 @@ public class NIOReactor extends Thread {
 			try {
 
 				log.info("Before select");
-				selector.select(100);
+				selector.select();
 				log.info("After select");
 				Set<SelectionKey> selKeys = selector.selectedKeys();
 				for (SelectionKey selKey : selKeys) {
@@ -59,6 +59,8 @@ public class NIOReactor extends Thread {
 						socketChannel.read(byteBuffer);
 
 						es.submit(new NIOHanlder(socketChannel, this, byteBuffer));
+						
+						selKey.interestOps(SelectionKey.OP_WRITE);
 
 					} else if (selKey.isWritable()) {
 
@@ -66,6 +68,9 @@ public class NIOReactor extends Thread {
 
 						ByteBuffer byteBuffer = (ByteBuffer) selKey.attachment();
 						if (byteBuffer != null) {
+							
+							log.info(new String(byteBuffer.array()));
+							
 							int write = socketChannel.write(byteBuffer);
 
 							log.info("write:" + write + "remain:" + byteBuffer.remaining());
