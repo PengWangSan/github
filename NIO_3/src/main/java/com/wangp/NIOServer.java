@@ -17,13 +17,12 @@ import org.slf4j.LoggerFactory;
 
 public class NIOServer {
 	
+	public static Logger log=LoggerFactory.getLogger(NIOServer.class);
 	
-	
-	private NIOHanlder nioHanlder=new NIOHanlder();
 	
 	private ExecutorService es=Executors.newFixedThreadPool(4);
 	
-	public static Logger log=LoggerFactory.getLogger(NIOServer.class);
+
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -54,13 +53,11 @@ public class NIOServer {
 					SocketChannel socketChannel = serverChannel.accept();
 					socketChannel.configureBlocking(false);
 					socketChannel.write(ByteBuffer.wrap(("Welcome,My Dear boy \r\n").getBytes()));
-					socketChannel.register(selecter, SelectionKey.OP_READ);
+					NIOReactor ractor=DispatcherTool.dispatch();
+					ractor.register(socketChannel,SelectionKey.OP_READ,null);
 				} else {
 					log.info("_select event");
-					es.submit(new Thread(new SelectionKeyProcessRunnable(selectionKey)) );
 					
-					nioHanlder.hanld(selectionKey);
-				
 				}
 				selectKeyIt.remove();
 
@@ -82,7 +79,6 @@ public class NIOServer {
 				socketChannel.write(ByteBuffer.wrap(("Welcome,My Dear boy \r\n").getBytes()));
 				socketChannel.register(selecter, SelectionKey.OP_READ);
 			} else {
-				new Thread(new SelectionKeyProcessRunnable(selectionKey)).start();
 			}
 
 		}
