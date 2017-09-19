@@ -1,3 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/study/Leader/LeaderHTTPServer.java=UTF-8
+encoding//src/main/java/com/study/Leader/nio/IOHandler.java=UTF-8
+encoding//src/main/java/com/study/Leader/nio/LocalCmandUtil.java=UTF-8
 encoding//src/main/java/com/study/nio/BackendSocket.java=UTF-8
 encoding//src/main/java/com/study/nio/util/ByteBufferUtil.java=UTF-8

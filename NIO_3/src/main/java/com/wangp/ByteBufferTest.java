@@ -16,6 +16,11 @@ public class ByteBufferTest {
 		System.out.println(Runtime.getRuntime().freeMemory() / 1024 / 1024);
 	}
 
+
+
+	public static void main(String[] args) throws InterruptedException {
+		testPosition();
+	}
 	public static void testPosition() {
 
 		ByteBuffer buffer = ByteBuffer.allocate(100);
@@ -100,9 +105,4 @@ public class ByteBufferTest {
 	    
 	    System.out.println("\t" + new String(bb.array()));  
 	}
-
-	public static void main(String[] args) throws InterruptedException {
-		testPosition();
-	}
-
 }
