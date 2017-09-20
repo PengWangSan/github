@@ -39,7 +39,7 @@ public class MyNIORector extends Thread {
 				if (selectedKey.isAcceptable()) {
                     new NIOAcceptor().run();
 					} else {
-						((IOHandler)selectedKey.attachment()).run();
+						((IOHandler)selectedKey.attachment()).run();;
 					}
 			}
 			selectedKeys.clear();
