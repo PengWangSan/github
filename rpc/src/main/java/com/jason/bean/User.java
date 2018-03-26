@@ -3,5 +3,5 @@ package com.jason.bean;
 public interface User {
 
 	
-	public void sayHello();
+	public void sayHello();//Test
 }
