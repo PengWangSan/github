@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Full Layout - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/themes/default/easyui.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/themes/icon.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/demo.css}">
+	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.easyui.min.js}"></script>
+</head>
+<body >
+	<table id="tt" class="easyui-datagrid"
+            th:url="@{/getDtxList}" style="width:100%" singleSelect="true" fitColumns="true"> 
+        <thead>
+            <tr>
+                <th field="tranId" width="10%" >Tran ID</th>
+                <th field="model" width="10%" >Model</th>
+                <th field="className" align="right" width="10%">Class name</th>
+                <th field="method"  align="right" width="10%">Method</th>
+                <th field="requestServiceId" width="10%">Request Service</th>
+                <th field="status"  align="center" width="10%">Stauts</th>
+                <th field="action"  align="center" formatter="formatPrice"  width="40%">Operator</th>
+            </tr>
+        </thead>
+    </table> 
+    
+   
+	
+</body>
+
+
+<script type="text/javascript">
+
+function formatPrice(val,row){
+	var s = '<a href="#" onclick="saverow('+row.tranId+')">Invoke</a> ';
+	return s;
+}
+function saverow(row){
+  alert(row);	
+}	
+</script>
+</html>

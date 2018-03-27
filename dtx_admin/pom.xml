@@ -13,6 +13,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -22,7 +24,12 @@
 		  <dependency>  
             <groupId>org.springframework.boot</groupId>  
             <artifactId>spring-boot-starter-thymeleaf</artifactId>  
-            <version>1.0.2.RELEASE</version>  
-        </dependency>  
+        </dependency> 
+        
+        <dependency>  
+		    <groupId>org.springframework.boot</groupId>  
+		    <artifactId>spring-boot-devtools</artifactId>  
+		    <optional>true</optional><!-- optional=true,依赖不会传递，该项目依赖devtools；之后依赖myboot项目的项目如果想要使用devtools，需要重新引入 -->  
+		</dependency>   
 	</dependencies>
 </project>

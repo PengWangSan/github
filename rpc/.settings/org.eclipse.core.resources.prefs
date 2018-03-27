@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/jason/tag/RpcBeanDefinitionParser.java=UTF-8
+encoding//src/main/java/com/jason/tag/RpcInvocationHandler.java=GBK
 encoding//src/main/java/com/jason/tag/RpcNamespaceHandler.java=UTF-8
 encoding//src/main/resources/META-INF/spring.handlers=UTF-8
 encoding//src/main/resources/META-INF/spring.schemas=UTF-8
