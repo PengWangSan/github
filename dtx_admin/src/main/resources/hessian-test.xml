@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>file:/data-ecoobuy/kz-context.properties</value>
+		</property>
+	</bean>
+
+	<bean id="threadApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${thread.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+
+	<bean id="orderApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${order.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	<bean id="commonApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${common.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="memberApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${member.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="productApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${product.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="cmsApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${cms.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="payApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${pay.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="openApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${open.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="searchApp"
+		class="com.ecoo.dtx.admin.rpc.HessianProxyFactoryBean">
+		<property name="serviceUrl">
+			<value>${search.app.url}</value>
+		</property>
+		<property name="serviceInterface">
+			<value>org.springframework.web.servlet.action.Action</value>
+		</property>
+	</bean>
+
+
+</beans>

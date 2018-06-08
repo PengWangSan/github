@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
@@ -35,7 +35,7 @@
 </body>
 
 
-<script type="text/javascript">
+<script type="text/javascript"  th:inline="javascript">
 $(function () {
     //动态菜单数据
     var treeData = [{
@@ -45,49 +45,15 @@ $(function () {
             text : "事务列表",
             state : "",
             attributes : {
-                url : "/dtx/list"
+                url : /*[[@{/dtx/list}]]*/
             }
-        }, {
-            text : "一级菜单2",
+        },{
+            text : "对话列表",
+            state : "",
             attributes : {
-                url : "http://www.baidu.com"
+                url : /*[[@{/chat/index}]]*/
             }
-        }, {
-            text : "一级菜单3",
-            state : "closed",
-            children : [{
-                text : "二级菜单1",
-                attributes : {
-                    url : ""
-                }
-            }, {
-                text : "二级菜单2",
-                attributes : {
-                    url : ""
-                }
-            }, {
-                text : "一级菜单3",
-                state : "closed",
-                children : [{
-                    text : "二级菜单1",
-                    attributes : {
-                        url : ""
-                    }
-                }, {
-                    text : "二级菜单2",
-                    attributes : {
-                        url : ""
-                    }
-                }, {
-                    text : "三级菜单3",
-                    attributes : {
-                        url : ""
-                    }
-                }
-                ]
-            }
-            ]
-        }
+        },
         ]
     }
     ];

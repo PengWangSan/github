@@ -1,3 +1,25 @@
-spring: 
+spring:
   thymeleaf: 
     cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.10.30.246:3306/myth?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+  application: 
+    name: dtx_admin
+  redis:
+    database: 0
+    host: 10.10.30.247
+    port: 6380 
+    
+mybatis:
+  mapperLocations: classpath:mybaits/*.xml
+  config: classpath:mybatis-config.xml
+  
+
+     

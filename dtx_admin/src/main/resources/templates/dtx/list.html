@@ -5,26 +5,62 @@
 	<title>Full Layout - jQuery EasyUI Demo</title>
 	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/themes/default/easyui.css}">
 	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/themes/icon.css}">
-	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/demo.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/demo/demo.css}">
 	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.easyui.min.js}"></script>
 </head>
 <body >
-	<table id="tt" class="easyui-datagrid"
-            th:url="@{/getDtxList}" style="width:100%" singleSelect="true" fitColumns="true"> 
+
+	  <div id="tb" style="padding:5px;height:auto">
+		<div>
+			Date From: <input class="easyui-datebox" style="width:80px">
+			To: <input class="easyui-datebox" style="width:80px">
+			Status: 
+			<select id="status" class="easyui-combobox" panelHeight="auto" style="width:100px">
+			    <option value="">全部</option>
+				<option value="1">成功</option>
+				<option value="2">开始</option>
+				<option value="3">失败</option>
+			</select>
+			<a href="javascript:searchDtx()" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+		</div>
+	</div>
+	<table id="dtxList" class="easyui-datagrid" title="事务列表"  toolbar="#tb"
+             style="width:100%" singleSelect="true" pagination="true"  > 
         <thead>
-            <tr>
+            <tr >
                 <th field="tranId" width="10%" >Tran ID</th>
                 <th field="model" width="10%" >Model</th>
-                <th field="className" align="right" width="10%">Class name</th>
-                <th field="method"  align="right" width="10%">Method</th>
-                <th field="requestServiceId" width="10%">Request Service</th>
-                <th field="status"  align="center" width="10%">Stauts</th>
-                <th field="action"  align="center" formatter="formatPrice"  width="40%">Operator</th>
+                <th field="className" align="right" width="15%">Class name</th>
+                <th field="method"   align="right" width="15%">Method</th>
+                <th field="param" width="35%">Param</th>
+                 <th field="createTime" width="10%" >createTime</th>
+                <th field="status"  formatter="formatStatus" align="center" width="5%">Stauts</th>
             </tr>
         </thead>
     </table> 
     
+    
+  
+    
+    
+    <div style="clear:both;margin:100px;"></div>
+    
+    <table id="dtxActors" class="easyui-datagrid" title="事务参与者"
+            th:url="@{/getDtxActors}" style="width:100%" singleSelect="true" > 
+        <thead>
+            <tr >
+                <th field="tranId" width="10%" >Tran ID</th>
+                <th field="model" width="10%" >Model</th>
+                <th field="className" align="right" width="15%">Class name</th>
+                <th field="method"   align="right" width="15%">Method</th>
+                <th field="param" width="35%">Param</th>
+                <th field="retryCount" width="5%">Retry Count</th>
+                <th field="status"  formatter="formatStatus"  align="center" width="5%">Stauts</th>
+                <th field="action"  align="center" width="5%" formatter="formatOp" >Operator</th>
+            </tr>
+        </thead>
+    </table> 
    
 	
 </body>
@@ -32,12 +68,93 @@
 
 <script type="text/javascript">
 
-function formatPrice(val,row){
-	var s = '<a href="#" onclick="saverow('+row.tranId+')">Invoke</a> ';
+
+
+$(function(){ 
+	
+	$('#dtxList').datagrid({
+		
+		url:"/getDtxList",
+		onClickRow: function(index,row){
+			$('#dtxActors').datagrid({
+				queryParams: {
+					tranId:row.tranId
+				}
+			});
+		}
+	});
+	
+	var pager = $('#dtxList').datagrid('getPager');
+
+	pager.pagination({
+		onSelectPage:function(pageNumber, pageSize){
+			$('#dtxList').datagrid({
+				queryParams: {
+					page:pageNumber,
+					rows:pageSize,
+					status:$('#status').val()
+				}
+			});
+		}
+	});
+}); 
+
+
+function searchDtx(){
+	
+	$('#dtxList').datagrid({
+		queryParams: {
+			status:$('#status').val()
+		}
+	});
+}
+function formatOp(val,row){
+	var s = '<font style="background-color:#aaaaaa">重试</font> ';
+	if(row.status!=1){
+		s= '<a href="#" onclick="retry('+row.id+')">重试</a> ';
+	}
 	return s;
 }
-function saverow(row){
-  alert(row);	
-}	
+function formatStatus(val,row){
+	
+	var str="";
+	if(val==1){
+		str="成功";
+	}else if(val==2){
+		str="开始";
+	}else if(val==3){
+		str="失败";
+	}
+	
+	return str;
+}
+function retry(id){
+	
+	var data = '{"id":'+id+'}';
+	  
+	$.ajax({
+        url:"/retry",
+        type: "POST",
+        data: data,
+        contentType : 'application/json',
+        //async: false,
+        dataType:"json",
+        success: function(result) {
+            var json = result;
+            if(json.model.state==0){
+            	alert("调用成功")
+            }else{
+            	alert("调用失败")
+            }
+
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(thrownError);
+            return false;
+        }
+    });
+}
+
+
 </script>
 </html>

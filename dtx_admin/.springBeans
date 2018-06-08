@@ -7,8 +7,10 @@
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
+		<config>java:com.ecoo.dtx.admin.controller.IndexController</config>
 	</configs>
 	<autoconfigs>
+		<config>java:com.ecoo.dtx.admin.DtxAdminApplication</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>
