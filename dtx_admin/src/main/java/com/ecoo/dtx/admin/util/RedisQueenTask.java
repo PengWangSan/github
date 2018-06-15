@@ -49,19 +49,23 @@ public class RedisQueenTask {
 		public void run() {
 			while (true) {
 				try {
-					DtxTransaction dtxTr = (DtxTransaction) redisTemplate.opsForList().rightPop(redisKey, 0,
-							TimeUnit.SECONDS);
+					DtxTransaction dtxTr = (DtxTransaction) redisTemplate.opsForList().rightPop(redisKey, 1000,
+							TimeUnit.MILLISECONDS);
+					if(dtxTr==null) {
+						continue;
+					}
+				
 					if (DtxTransactionStatusEnum.BEGIN.getCode() == dtxTr.getStatus()) {
 						dtxTransactionService.begin(dtxTr);
 					} else {
 						dtxTransactionService.finish(dtxTr);
 					}
 				} catch (Exception e) {
-					try {
-						TimeUnit.MILLISECONDS.sleep(100);
-					} catch (InterruptedException e1) {
-						log.error("sleep错误", e);
-					}
+//					try {
+//						TimeUnit.MILLISECONDS.sleep(100);
+//					} catch (InterruptedException e1) {
+//						log.error("sleep错误", e);
+//					}
 					log.error("redis消息错误", e);
 				}
 			}

@@ -17,11 +17,15 @@
  */
 package com.ecoo.dtx.admin.msg;
 
+import com.dyuproject.protostuff.LinkedBuffer;
+import com.dyuproject.protostuff.ProtostuffIOUtil;
+import com.dyuproject.protostuff.Schema;
+import com.dyuproject.protostuff.runtime.RuntimeSchema;
 import com.ecoo.dtx.model.DtxTransaction;
 import com.ecoo.dtx.model.DtxTransactionActor;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,62 +33,51 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KryoSerializer {
+/**
+ * @author xiaoyu
+ */
+@SuppressWarnings("unchecked")
+public class ProtostuffSerializer {
+	private static final Objenesis OBJENESIS_STD = new ObjenesisStd(true);
+
+
 	/**
-	 * 序列化
+	 * 序列化对象
 	 *
 	 * @param obj
 	 *            需要序更列化的对象
-	 * @return 序列化后的byte 数组
-	 * @throws IOException
+	 * @return byte []
 	 * @throws MythException
-	 *             异常
+	 *             异常信息
 	 */
-	public static byte[] serialize(Object obj,Class...refenceClass) throws IOException {
-		byte[] bytes;
+	public static byte[] serialize(Object obj) {
+		Class cls = obj.getClass();
+		LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		// 获取kryo对象
-		Kryo kryo = new Kryo();
-        int i=10;
-		kryo.register(obj.getClass(),i++);
-		for(Class classT:refenceClass) {
-			kryo.register(classT,i++);
+		try {
+			Schema schema = RuntimeSchema.createFrom(cls);
+			ProtostuffIOUtil.writeTo(outputStream, obj, schema, buffer);
+		} catch (Exception e) {
+		} finally {
+			buffer.clear();
 		}
-		Output output = new Output(outputStream);
-		kryo.writeObject(output, obj);
-		bytes = output.toBytes();
-		output.flush();
-		output.close();
-		outputStream.close();
-		return bytes;
+		return outputStream.toByteArray();
 	}
 
-	/**
-	 * 反序列化
-	 *
-	 * @param param
-	 *            需要反序列化的byte []
-	 * @return 序列化对象
-	 * @throws IOException
-	 * @throws MythException
-	 *             异常
-	 */
-	public static <T> T deSerialize(byte[] param, Class<T> clazz,Class...refenceClass) throws IOException {
-		T object;
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(param);
-		Kryo kryo = new Kryo();
-		int i=10;
-		kryo.register(clazz,i++);
-		for(Class classT:refenceClass) {
-			kryo.register(classT,i++);
+	public static <T> T deSerialize(byte[] param, Class<T> clazz)  {
+		T object=null;
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(param);
+			Class cls = clazz;
+			object = OBJENESIS_STD.newInstance((Class<T>) cls);
+			Schema schema = RuntimeSchema.createFrom(cls);
+			ProtostuffIOUtil.mergeFrom(inputStream, object, schema);
+			return object;
+		} catch (Exception e) {
 		}
-		Input input = new Input(inputStream);
-		object = kryo.readObject(input, clazz);
-		input.close();
-		inputStream.close();  
 		return object;
 	}
-
+	
 	public static void main(String[] ars) throws IOException {
 
 		DtxTransaction test = new DtxTransaction();

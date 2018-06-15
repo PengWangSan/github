@@ -15,6 +15,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.Assert;
 
 import com.ecoo.dtx.admin.msg.KryoSerializer;
+import com.ecoo.dtx.admin.msg.ProtostuffSerializer;
 import com.ecoo.dtx.model.DtxTransaction;
 import com.ecoo.dtx.model.DtxTransactionActor;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -46,26 +47,24 @@ public class RedisConfig {
 
 		template.setKeySerializer(new StringRedisSerializer());
 
-		KryoRedisSerializer<DtxTransaction>  KryoRedisSerializer = new KryoRedisSerializer<DtxTransaction>(DtxTransaction.class,new Class[] {DtxTransactionActor.class});
+		ProtoRedisSerializer<DtxTransaction>  KryoRedisSerializer = new ProtoRedisSerializer<DtxTransaction>(DtxTransaction.class);
 		template.setValueSerializer(KryoRedisSerializer);
 
 		return template;
 	}
 
-	public class KryoRedisSerializer<T> implements RedisSerializer<T> {
+	public class ProtoRedisSerializer<T> implements RedisSerializer<T> {
 
 		
 		private final Class<T> type;
 		
-		private final Class[] refClass;
 		
-		public KryoRedisSerializer(Class<T> type,Class[] refClass) {
+		public ProtoRedisSerializer(Class<T> type) {
 
 			Assert.notNull(type, "Type must not be null!");
 
 			this.type = type;
 			
-			this.refClass=refClass;
 		}
 		
 		@Override
@@ -78,8 +77,12 @@ public class RedisConfig {
 			
 			
 			try {
-				return KryoSerializer.deSerialize(bytes, type,refClass);
-			} catch (IOException e) {
+				if(bytes==null) {
+					return null;
+				}
+				
+				return ProtostuffSerializer.deSerialize(bytes, type);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;

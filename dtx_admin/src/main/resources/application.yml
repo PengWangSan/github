@@ -14,8 +14,10 @@ spring:
     name: dtx_admin
   redis:
     database: 0
-    host: 10.10.30.247
-    port: 6380 
+    host: 10.10.30.246
+    port: 6379 
+    timeout: 5000
+      
     
 mybatis:
   mapperLocations: classpath:mybaits/*.xml

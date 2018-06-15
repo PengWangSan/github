@@ -21,6 +21,7 @@ import com.ecoo.dtx.admin.pageable.Page;
 import com.ecoo.dtx.admin.rpc.AppModel;
 import com.ecoo.dtx.admin.rpc.HessianClient;
 import com.ecoo.dtx.admin.service.DtxTransactionService;
+import com.ecoo.dtx.admin.ws.SocketHolder;
 import com.ecoo.dtx.admin.ws.WebSocket;
 import com.ecoo.dtx.model.DtxTransaction;
 import com.ecoo.dtx.model.DtxTransactionActor;
@@ -44,9 +45,12 @@ public class ChatController {
 		
 		
 		
-		
-		return new ModelAndView("chat/index", "sockets", WebSocket.sockets);
+		return new ModelAndView("chat/index", "sockets", SocketHolder.getClientSoockest());
 	}
 
+	@RequestMapping("/chat/client")
+	ModelAndView client() {
+		return new ModelAndView("chat/client");
+	}
 
 }

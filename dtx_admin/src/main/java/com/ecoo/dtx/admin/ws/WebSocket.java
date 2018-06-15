@@ -3,7 +3,6 @@ package com.ecoo.dtx.admin.ws;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.EndpointConfig;
@@ -12,34 +11,37 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-import com.ecoo.dtx.admin.config.GetHttpSessionConfigurator;
+import com.ecoo.dtx.admin.ws.cmd.MsgProcessor;
+import com.ecoo.dtx.admin.ws.dto.MsgEntity;
+import com.ecoo.dtx.admin.ws.dto.MsgTypeEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ServerEndpoint(value="/websocket",configurator=GetHttpSessionConfigurator.class)
-@Component
-public class WebSocket {
+
+public abstract class WebSocket {
 
 	public Logger logger = LoggerFactory.getLogger(WebSocket.class);
 
 	private Session session;
 	
-	public static Map<String,WebSocket> sockets=new HashMap<>();
+	private HttpSession httpSession;
+
+	private ObjectMapper objectMapper=new ObjectMapper();
+
 
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig config) {
 
 		logger.info("————————————连接开始");
+
 		
-		 HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-         
-		
-		this.session=session;
-		sockets.put(httpSession.getId(), this);
+		HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		this.session = session;
+		this.httpSession=httpSession;
+		SocketHolder.getSockets().put(httpSession.getId(), this);
 	}
 
 	/**
@@ -47,6 +49,8 @@ public class WebSocket {
 	 */
 	@OnClose
 	public void onClose() {
+		
+		logger.info("__________ws closed________");
 	}
 
 	/**
@@ -59,15 +63,16 @@ public class WebSocket {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-
-		logger.info("————————————消息：" + message);
-
+		logger.info("收到消息"+message);
+		MsgEntity msgT=null;
 		try {
-			session.getBasicRemote().sendText("OK+++");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			 msgT=objectMapper.readValue(message, MsgEntity.class);
+		} catch (Exception e) {
+			logger.error("消息格式錯誤",e);
 		}
+		msgT.setMsgType(getMsgType().getCode());
+		msgT.setFrom(this.httpSession.getId());
+		MsgProcessor.reciveMsg(msgT);
 	}
 
 	/**
@@ -80,22 +85,27 @@ public class WebSocket {
 	public void onError(Session session, Throwable error) {
 	}
 
+	public void sendMessage(MsgEntity msg) {
+		try {
+			session.getBasicRemote().sendText(objectMapper.writeValueAsString(msg));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Session getSession() {
 		return session;
 	}
 
+	
+	
+	
 	public void setSession(Session session) {
 		this.session = session;
 	}
+	
+	
+	public abstract MsgTypeEnum  getMsgType();
 
-	public static Map<String, WebSocket> getSockets() {
-		return sockets;
-	}
 
-	public static void setSockets(Map<String, WebSocket> sockets) {
-		WebSocket.sockets = sockets;
-	}
-	
-	
-	
 }
