@@ -50,6 +50,7 @@ public abstract class WebSocket {
 	@OnClose
 	public void onClose() {
 		
+		SocketHolder.getSockets().remove(httpSession.getId());
 		logger.info("__________ws closed________");
 	}
 
@@ -70,9 +71,12 @@ public abstract class WebSocket {
 		} catch (Exception e) {
 			logger.error("消息格式錯誤",e);
 		}
+		msgT.setTime(System.currentTimeMillis());
 		msgT.setMsgType(getMsgType().getCode());
 		msgT.setFrom(this.httpSession.getId());
 		MsgProcessor.reciveMsg(msgT);
+		
+		//TODO  存储消息记录
 	}
 
 	/**

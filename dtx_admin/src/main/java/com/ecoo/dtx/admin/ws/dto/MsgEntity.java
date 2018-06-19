@@ -8,6 +8,8 @@ public class MsgEntity {
 	
 	private String to;
 	
+	private String fromName;
+	
 	
 	private String msgBody;
 	
@@ -15,12 +17,28 @@ public class MsgEntity {
 	private int msgType;
 	
 	
-	
+	private long time;
 
 
 	public int getMsgType() {
 		return msgType;
 	}
+
+	
+	
+
+	public String getFromName() {
+		return fromName;
+	}
+
+
+
+
+	public void setFromName(String fromName) {
+		this.fromName = fromName;
+	}
+
+
 
 
 	public void setMsgType(int msgType) {
@@ -55,6 +73,16 @@ public class MsgEntity {
 
 	public void setMsgBody(String msgBody) {
 		this.msgBody = msgBody;
+	}
+
+
+	public long getTime() {
+		return time;
+	}
+
+
+	public void setTime(long time) {
+		this.time = time;
 	}
 	
 	

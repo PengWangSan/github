@@ -23,6 +23,8 @@ import com.ecoo.dtx.admin.rpc.HessianClient;
 import com.ecoo.dtx.admin.service.DtxTransactionService;
 import com.ecoo.dtx.admin.ws.SocketHolder;
 import com.ecoo.dtx.admin.ws.WebSocket;
+import com.ecoo.dtx.admin.ws.dto.MsgTypeEnum;
+import com.ecoo.dtx.admin.ws.dto.User;
 import com.ecoo.dtx.model.DtxTransaction;
 import com.ecoo.dtx.model.DtxTransactionActor;
 import com.ecoo.dtx.model.query.TranActorCondition;
@@ -42,15 +44,29 @@ public class ChatController {
 
 	@RequestMapping("/chat/index")
 	ModelAndView index() {
-		
-		
-		
+
 		return new ModelAndView("chat/index", "sockets", SocketHolder.getClientSoockest());
 	}
 
 	@RequestMapping("/chat/client")
 	ModelAndView client() {
 		return new ModelAndView("chat/client");
+	}
+
+	@RequestMapping("/chat/clientList")
+	@ResponseBody
+	List<User> clientList() {
+		List<User> users = new ArrayList<User>();
+		Map<String, WebSocket> sockets=SocketHolder.getSockets();
+		for(String sessinoId:SocketHolder.getSockets().keySet()) {
+			WebSocket socket=sockets.get(sessinoId);
+			if(MsgTypeEnum.CLIENT==socket.getMsgType()) {
+				User user=new User();
+				user.setId(sessinoId);
+				users.add(user);
+			}
+		}
+		return users;
 	}
 
 }

@@ -8,19 +8,20 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/js/jquery-easyui-1.5.4.2/demo/demo.css}">
 	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/js/jquery-easyui-1.5.4.2/jquery.easyui.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/chat/notifaction.js}"></script>
 </head>
 	<body class="easyui-layout">
 	<div region="west" split="true" title="回话" style="width:150px;" >
 		<ul id="clietList">
 			<li th:each="socket : ${sockets}">
-				<a href="javascript:void(0)" onclick="showcontent()" th:text="${socket.key}"></a>
+				<a href="javascript:void(0)" onclick="showcontent(this)" th:text="${socket.key}"></a>
 			</li>
 		</ul>
 	</div>
 	<div id="content" region="center" title="对话" style="padding:5px;">
 	
 	
-	   <div class="easyui-layout" fit="true">
+	   <div class="easyui-layout" fit="true" id="msgLayout">
 		<div region="north"  split="true" style="height:80%;" id="contenDiv" >
 		</div>
 		<div region="center"  >
@@ -36,6 +37,31 @@
     </body>
     
     <script type="text/javascript">
+    
+    		function listClient(){
+    			$.ajax({
+    		        url:"/retry",
+    		        type: "POST",
+    		        data: data,
+    		        contentType : 'application/json',
+    		        //async: false,
+    		        dataType:"json",
+    		        success: function(result) {
+    		            var json = result;
+    		            if(json.model.state==0){
+    		            	alert("调用成功")
+    		            }else{
+    		            	alert("调用失败")
+    		            }
+
+    		        },
+    		        error: function (xhr, ajaxOptions, thrownError) {
+    		            console.log(thrownError);
+    		            return false;
+    		        }
+    		    });
+    			
+    		}
     		
     		var clientId=$("#clietList li:first a").text();
     	
@@ -52,7 +78,7 @@
             	  
             	  var data = JSON.parse(event.data);
             	  $("#contenDiv").append(data.msgBody+"</br>");
-            	  
+            	  NotificationHandler.showNotification(data.msgBody);
             
               }; 
 
@@ -70,6 +96,8 @@
             	 	var text = $("#inputMsg").val();
             	    var msg = {
             	        "msgBody" : text,
+            	        "to" : clientId,
+            	        "fromName" : "admin",
             	        
             	    };
             	    msg = JSON.stringify(msg);
@@ -80,9 +108,14 @@
                	   $("#inputMsg").val("");
             }
 
-            function showcontent(){
+            function showcontent(id){
+            	$("#clietList li a").each(function(){
+               		 $(this).css("font-weight","");
+            	});	
             	
-            	$('#content').layout().
+            	 clientId=$(id).text();
+            	 $(id).css("font-weight","bold");
+            	 $("#msgLayout").layout('panel','north').panel('clear');
             }
         </script>
 </html>
